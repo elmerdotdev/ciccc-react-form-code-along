@@ -22,21 +22,24 @@ const ControlledForm2 = () => {
   })
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false)
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const { name, value, type } = e.target
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: value
+    }))
+  }
 
-    if (type === "checkbox") {
-      const checked = (e.target as HTMLInputElement).checked
-      setFormData(prevState => {
-        const education = checked ? [...prevState.education, value] : prevState.education.filter(level => level !== value)
-        return { ...prevState, education }
-      })
-    } else {
-      setFormData(prevState => ({
-        ...prevState,
-        [name]: value
-      }))
-    }
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, checked } = e.target
+    setFormData(prevState => {
+      const updatedEducation = checked
+        ? [...prevState.education, value]
+        : prevState.education.filter(level => level !== value)
+      return { ...prevState, education: updatedEducation }
+    })
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -67,12 +70,7 @@ const ControlledForm2 = () => {
         </div>
         <div className="field">
           <label htmlFor="role">Role</label>
-          <select
-            name="role"
-            id="role"
-            value={formData.role}
-            onChange={handleChange}
-          >
+          <select name="role" id="role" value={formData.role} onChange={handleChange}>
             <option value="">Select your role</option>
             <option value="Backend Developer">Backend Developer</option>
             <option value="Frontend Developer">Frontend Developer</option>
@@ -87,7 +85,7 @@ const ControlledForm2 = () => {
             id="education-primary"
             value="Primary"
             checked={formData.education.includes("Primary")}
-            onChange={handleChange}
+            onChange={handleCheckboxChange}
           />
           <label htmlFor="education-grade">Grade school</label>
           <input
@@ -96,7 +94,7 @@ const ControlledForm2 = () => {
             id="education-grade"
             value="Grade School"
             checked={formData.education.includes("Grade School")}
-            onChange={handleChange}
+            onChange={handleCheckboxChange}
           />
           <label htmlFor="education-high">High school</label>
           <input
@@ -105,7 +103,7 @@ const ControlledForm2 = () => {
             id="education-high"
             value="High School"
             checked={formData.education.includes("High School")}
-            onChange={handleChange}
+            onChange={handleCheckboxChange}
           />
           <label htmlFor="education-college">College</label>
           <input
@@ -114,7 +112,7 @@ const ControlledForm2 = () => {
             id="education-college"
             value="College"
             checked={formData.education.includes("College")}
-            onChange={handleChange}
+            onChange={handleCheckboxChange}
           />
         </div>
         <div className="field">
